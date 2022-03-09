@@ -13,9 +13,17 @@ const routes = [
     }
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/About.vue'),
+    path: '/frenchies',
+    name: 'Frenchies',
+    component: () => import('../views/Frenchies.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/micro',
+    name: 'Micro',
+    component: () => import('../views/Micro.vue'),
     meta: {
       requiresAuth: true
     }

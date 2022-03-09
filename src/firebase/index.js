@@ -1,17 +1,21 @@
 import { initializeApp } from "firebase/app"
 import { getAuth } from "firebase/auth"
+import { GoogleAuthProvider } from "firebase/auth";
+
+const provider = new GoogleAuthProvider();
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB3Z8T6I_ZZ9fnXnUUGDL9-3ocJVII3wEM",
-  authDomain: "vue-fire-auth-yt.firebaseapp.com",
-  projectId: "vue-fire-auth-yt",
-  storageBucket: "vue-fire-auth-yt.appspot.com",
-  messagingSenderId: "745571531497",
-  appId: "1:745571531497:web:31ef49d3de839b54030e78"
-}
+  apiKey: "AIzaSyCsbSvL_VSzoHSkuJmkxjE6-v1N1W2zXuE",
+  authDomain: "eriesistable-bullies.firebaseapp.com",
+  projectId: "eriesistable-bullies",
+  storageBucket: "eriesistable-bullies.appspot.com",
+  messagingSenderId: "824106009722",
+  appId: "1:824106009722:web:98a7316d49eeea63e4a7c3",
+  measurementId: "G-TY4LHLLC5G"
+};
 
 const app = initializeApp(firebaseConfig)
 
 const auth = getAuth(app)
 
-export { auth }
+export { auth, provider }
