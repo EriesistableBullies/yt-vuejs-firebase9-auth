@@ -14,8 +14,6 @@
           v-model="register_form.password"
         />
         <input type="submit" value="Register" />
-        <button @click="googleSignIn">Sign In with Google</button>
-
         <img src="../assets/ebz-logo.png" />
       </form>
 
@@ -50,6 +48,7 @@ export default {
 
     const login = () => {
       store.dispatch("login", login_form.value);
+    
     };
 
     const register = () => {

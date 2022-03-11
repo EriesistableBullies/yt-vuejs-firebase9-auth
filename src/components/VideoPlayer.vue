@@ -34,5 +34,10 @@ export default {
     border-style: solid;
     border-radius: 3rem;
     border-color: red;
+    transition: transform .2s;
+}
+.promo-vid:hover{
+  background-color: black;
+  transform: scale(1.2);
 }
 </style>

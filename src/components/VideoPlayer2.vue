@@ -1,7 +1,7 @@
 <template>
   <video width="720" height="640" autoplay loop="true" class="promo-vid" ref="videoPlayer">
     <source
-      src="../assets/frenchie-in-field.mp4"
+      src="../assets/fendi-tyra2.mp4"
       type="video/mp4"
     />
     Your browser does not support the video tag.
@@ -22,9 +22,6 @@ export default {
       this.$refs.videoPlayer.playbackRate = speed;
     },
   },
-  // mounted(){
-  //      this.$refs.videoPlayer.play();
-  // }
 };
 </script>
 <style scoped>
@@ -33,5 +30,10 @@ export default {
     border-style: solid;
     border-radius: 3rem;
     border-color: red;
+    transition: transform .2s;
+}
+.promo-vid:hover{
+  background-color: black;
+  transform: scale(1.2);
 }
 </style>

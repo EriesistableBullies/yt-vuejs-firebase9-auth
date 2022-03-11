@@ -29,6 +29,14 @@ const routes = [
     }
   },
   {
+    path: '/abg-dapp',
+    name: 'Abg',
+    component: () => import('../views/Abg.vue'),
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
     path: '/login',
     name: 'Login',
     component: Login
