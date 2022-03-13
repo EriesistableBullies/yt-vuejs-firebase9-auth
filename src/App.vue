@@ -6,10 +6,14 @@
     <router-link to="/">Home</router-link> |
     <select id="breed-select" @change="breedSelect">
       <option value="0">Select Breed</option>
-      <option value="1"><router-link to="/frenchies">Frenchies</router-link></option>
-      <option value="2"><router-link to="/micro">Micro Exotic Bully</router-link></option>
+      <option value="1">
+        <router-link to="/frenchies">Frenchies</router-link>
+      </option>
+      <option value="2">
+        <router-link to="/micro">Micro Exotic Bully</router-link>
+      </option>
     </select>
-     |
+    |
     <router-link to="/abg-dapp">Bully Tracker Web3.0 Dapp</router-link> |
     <router-link to="/my-kennel">My Kennel</router-link> |
     <router-link to="/shop">Shop</router-link> |
@@ -34,39 +38,47 @@ export default {
   methods: {
     breedSelect() {
       const menu = document.getElementById('breedSelect')
-      const menutOpt = document.getElementsByTagName('option')
-      if(menutOpt[1].selected) {
+      const menutOpt = document.getElementsByTagName("option");
+      if (menutOpt[1].selected) {
         router.push({
-          path: '/frenchies'
+          path: "/frenchies",
+        });
+      } else if (menutOpt[2].selected) {
+        router.push({
+          path: "/micro",
         });
       }
-      else if (menutOpt[2].selected) {
-        router.push({
-          path: '/micro'
-        });
-      }
-      return menu.style.display === menutOpt[0]
-    }
-  }
+       return menu.style.display === menutOpt[0]
+    },
+  },
 };
 </script>
 
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Bebas Neue";
+  letter-spacing: 0.2rem;
+  color: white;
 }
 
-#breed-select{
+#breed-select {
+  font-size: x-large;
   height: 30px;
   width: 200px;
+  background-color: white;
+  color: black;
+  letter-spacing: 0.2rem;
 }
 
-option{
-  font-size: large;
-  font-family: 'Bebas Neue';
+option {
+  font-size: x-large;
+  font-family: "Bebas Neue";
+  color: black;
+  letter-spacing: 0.2rem;
 }
 
 #logo-bully {
@@ -75,7 +87,7 @@ option{
 }
 
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Bebas Neue, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -87,8 +99,14 @@ option{
   width: auto;
   font-size: x-large;
   font-weight: bold;
-  color: black;
-  background-color: white;
+  color: white;
+  background-color: black;
+  border: 0.3rem;
+  border-style: solid;
+  border-radius: 1rem;
+  border-color: red;
+  padding: 0.3rem;
+  font-family: "Bebas Neue";
 }
 
 #nav {
