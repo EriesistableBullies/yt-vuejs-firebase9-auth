@@ -84,6 +84,7 @@ p {
   text-align: justify;
   font-size: xx-large;
   font-family: "Bebas Neue";
+  color: white;
   width: 80%;
   padding: 1rem;
 }

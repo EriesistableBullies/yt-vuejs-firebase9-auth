@@ -1,9 +1,9 @@
 <template>
-  <div id="nav" v-if="$store.state.user">
-    <router-link to="/"
+  <div id="nav">
+    <router-link to="/home"
       ><img id="logo-bully" src="./assets/ebz-logo.png"
     /></router-link>
-    <router-link to="/">Home</router-link> |
+    <router-link to="/home">Home</router-link> <span class="divider">|</span>
     <select id="breed-select" @change="breedSelect">
       <option value="0">Select Breed</option>
       <option value="1">
@@ -13,27 +13,39 @@
         <router-link to="/micro">Micro Exotic Bully</router-link>
       </option>
     </select>
-    |
-    <router-link to="/abg-dapp">Bully Tracker Web3.0 Dapp</router-link> |
-    <router-link to="/my-kennel">My Kennel</router-link> |
-    <router-link to="/shop">Shop</router-link> |
-    <button @click="$store.dispatch('logout')">Logout</button>
+    <span class="divider">|</span>
+    <router-link to="/chatroom">Park Ave.</router-link> <span class="divider">|</span>
+    <router-link to="/abg-dapp">Bully Tracker Web3.0 Dapp</router-link> <span class="divider">|</span>
+    <router-link to="/profile">My Kennel</router-link> <span class="divider">|</span>
+    <router-link to="/shop">Shop</router-link> <span class="divider">|</span>
+    <button @click="handleClick" style="cursor: pointer">Logout</button>
   </div>
   <router-view />
+  <Footer/>
 </template>
 
 <script>
-import { onBeforeMount } from "vue";
-import { useStore } from "vuex";
 import router from "./router";
-
+import './css/main.css'
+import useLogout from "./composables/useLogout";
+import getUser from "./composables/getUser";
+import Footer from './components/Footer.vue';
 export default {
+  components: { Footer },
   setup() {
-    const store = useStore();
+    const { logout, error } = useLogout()
+    const { user } = getUser()
 
-    onBeforeMount(() => {
-      store.dispatch("fetchUser");
-    });
+    async function handleClick() {
+      await logout()
+      if(!error.value) {
+        console.log('user logged out')
+        router.push({
+          name: 'Welcome'
+        })
+      }
+    }
+    return { handleClick, user }
   },
   methods: {
     breedSelect() {
@@ -62,6 +74,10 @@ export default {
   box-sizing: border-box;
   font-family: "Bebas Neue";
   letter-spacing: 0.2rem;
+  color: black;
+}
+
+.divider{
   color: white;
 }
 
@@ -133,5 +149,8 @@ option {
 }
 #nav a.router-link-exact-visited {
   color: grey;
+}
+footer{
+ 
 }
 </style>
