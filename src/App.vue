@@ -14,42 +14,44 @@
       </option>
     </select>
     <span class="divider">|</span>
-    <router-link to="/chatroom">Park Ave.</router-link> <span class="divider">|</span>
-    <router-link to="/abg-dapp">Bully Tracker Web3.0 Dapp</router-link> <span class="divider">|</span>
-    <router-link to="/profile">My Kennel</router-link> <span class="divider">|</span>
-    <router-link to="/shop">Shop</router-link> <span class="divider">|</span>
+    <router-link to="/chatroom">Park Ave.</router-link>
+    <span class="divider">|</span>
+    <router-link to="/abg-dapp">Bully Tracker Web3.0 Dapp</router-link>
+    <span class="divider">|</span>
+    <router-link to="/profile">My Kennel</router-link>
+    <span class="divider">|</span> <router-link to="/shop">Shop</router-link>
+    <span class="divider">|</span>
     <button @click="handleClick" style="cursor: pointer">Logout</button>
   </div>
   <router-view />
-  <Footer/>
+  <Footer style="display: none" class="footer-global" />
 </template>
 
 <script>
 import router from "./router";
-import './css/main.css'
+import "./css/main.css";
 import useLogout from "./composables/useLogout";
 import getUser from "./composables/getUser";
-import Footer from './components/Footer.vue';
+import Footer from "./components/Footer.vue";
 export default {
   components: { Footer },
   setup() {
-    const { logout, error } = useLogout()
-    const { user } = getUser()
+    const { logout, error } = useLogout();
+    const { user } = getUser();
 
     async function handleClick() {
-      await logout()
-      if(!error.value) {
-        console.log('user logged out')
+      await logout();
+      if (!error.value) {
         router.push({
-          name: 'Welcome'
-        })
+          name: "Welcome",
+        });
       }
     }
-    return { handleClick, user }
+    return { handleClick, user };
   },
   methods: {
     breedSelect() {
-      const menu = document.getElementById('breedSelect')
+      const menu = document.getElementById("breedSelect");
       const menutOpt = document.getElementsByTagName("option");
       if (menutOpt[1].selected) {
         router.push({
@@ -60,7 +62,7 @@ export default {
           path: "/micro",
         });
       }
-       return menu.style.display === menutOpt[0]
+      return menu.style.display === menutOpt[0];
     },
   },
 };
@@ -77,7 +79,7 @@ export default {
   color: black;
 }
 
-.divider{
+.divider {
   color: white;
 }
 
@@ -150,7 +152,12 @@ option {
 #nav a.router-link-exact-visited {
   color: grey;
 }
-footer{
- 
+.footer-global {
+  position:fixed;
+  top: 100;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 250px
 }
 </style>

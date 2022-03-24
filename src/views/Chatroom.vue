@@ -111,8 +111,6 @@ export default {
 
                     
 
-                    console.log("-- ("+this.images.length +") Images from TheDogAPI.com")
-                    console.log( this.pagination_count ,'images available for this query.')
                     
                 }catch(err){
                     console.log(err)

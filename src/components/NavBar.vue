@@ -30,8 +30,6 @@ export default {
           .getDownloadURL()
           .then((photo) => {
             image.value = photo;
-            console.log(user);
-            console.log(photo);
           });
       }
     });

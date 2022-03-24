@@ -36,7 +36,6 @@ export default {
     async function handleClick() {
       await logout();
       if (!error.value) {
-        console.log("user logged out");
         router.push({
           name: "Welcome",
         });

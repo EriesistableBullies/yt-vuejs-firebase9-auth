@@ -25,7 +25,6 @@
 <script>
 import { ref } from "vue";
 import useSignup from "../composables/useSignup";
-// import firebase from "firebase";
 import { storage } from "../firebase/index";
 export default {
   setup(props, context) {
@@ -64,7 +63,7 @@ export default {
         displayName: displayName.value,
         password: password.value,
         photoURL: photoURL.value,
-      });
+      })
       if (!error.value) {
         context.emit("signup");
       }

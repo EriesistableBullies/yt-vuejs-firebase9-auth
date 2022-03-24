@@ -35,7 +35,7 @@ export default {
 input{
     width:200px;
     height: auto;
-    font-size: x-large;
+    font-size: xx-large;
 }
 
 </style>
