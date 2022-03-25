@@ -47,7 +47,7 @@
 <script>
 import { ref } from "vue";
 // import useSignup from "../composables/useSignup";
-import { storage } from "../firebase/index";
+// import { storage } from "../firebase/index";
 import useCollection from "../composables/useCollection";
 import { timestamp } from "../firebase/index";
 import getUser from "../composables/getUser";
@@ -88,9 +88,13 @@ export default {
       })
     }
 
+    // async function addPost() {
+
+    // }
+
     async function updateProfileStatus() {
       const status = {
-        message: message.value,
+        status: mystat.value,
         createdAt: timestamp()
       }
       await addDoc(status)
@@ -111,7 +115,7 @@ export default {
       }
     });
 
-    return { mystat, displayName, photoURL, user, image, onChange, updateProfile };
+    return { mystat, displayName, photoURL, user, image, onChange, updateProfile, updateProfileStatus };
   },
 };
 </script>

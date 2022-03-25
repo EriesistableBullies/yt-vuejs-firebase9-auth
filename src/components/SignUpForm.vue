@@ -25,15 +25,15 @@
 <script>
 import { ref } from "vue";
 import useSignup from "../composables/useSignup";
-import { storage } from "../firebase/index";
+import { auth, storage } from "../firebase/index";
 export default {
   setup(props, context) {
-    const { error, signup, createUser } = useSignup();
+    const { error, signup, createUser, writeUserData } = useSignup();
     //refs
     const displayName = ref("");
     const email = ref("");
     const password = ref("");
-    const photoURL = ref(null)
+    const photoURL = ref("")
     // const imageData = ref("")
     function onChange(e) {
       this.uploadValue = 0;
@@ -57,7 +57,10 @@ export default {
               },
             );
         }
-      );
+      ).then(() => {
+        writeUserData(auth.currentUser.uid, displayName.value, email.value, photoURL.value)
+      })
+      
       await createUser({
         email: email.value,
         displayName: displayName.value,
