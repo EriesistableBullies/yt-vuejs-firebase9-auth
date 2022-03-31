@@ -73,11 +73,6 @@ const routes = [
       requiresAuth: true
     }
   },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: Login
-  // }
 ]
 
 const router = createRouter({

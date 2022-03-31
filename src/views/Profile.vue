@@ -18,12 +18,12 @@
             accept="image/*"
             @change="onChange"
             placeholder="Choose Profile Photo"
-            style="font-size: x-small"
+            style="font-size: x-small; cursor: pointer"
           />
           <div class="error">
             {{ error }}
           </div>
-          <button id="signupbtn">Update</button>
+          <button style="cursor: pointer" id="signupbtn">Update</button>
         </form>
       </div>
       <div class="status">
@@ -31,14 +31,25 @@
           <textarea
             style="height: 200px"
             placeholder="Update status..."
-            v-model="mystat"
+           v-model="mystat"
           >
           </textarea>
           <div class="error">
             {{ error }}
           </div>
-          <button style="margin-top: 1rem">update status</button>
+          <button style="margin-top: 1rem; cursor: pointer">
+            update status
+          </button>
         </form>
+      </div>
+    </div>
+    <div v-if="user" class="wall">
+      <div class="status_bar">
+        <h2 id="status">Current<br />Status:</h2>
+        <p id="status" class="status_display">
+         {{this.currentStat}}
+        </p>
+        <button style="cursor: pointer" id="dm">Send Message</button>
       </div>
     </div>
   </div>
@@ -46,29 +57,33 @@
 
 <script>
 import { ref } from "vue";
-// import useSignup from "../composables/useSignup";
-// import { storage } from "../firebase/index";
-import useCollection from "../composables/useCollection";
-import { timestamp } from "../firebase/index";
+// import writeNewPost from "../composables/rest";
 import getUser from "../composables/getUser";
 import firebase from "firebase";
 import { auth } from "../firebase/index";
+import { rtdb } from "../firebase/index";
+import useRest from "../composables/rest";
+// import { storage } from "../firebase/index";
 export default {
+  name: 'Profile',
   data() {
     return {
       photo: null,
+      profile: null
     };
   },
+  created() {
+    // let ref = db.collection('users')
+    // ref.doc()
+  },
   setup() {
+    const { writeNewPost } = useRest();
     const { user } = getUser();
     const image = ref(null);
     const displayName = ref("");
-    // const email = ref("");
-    // const password = ref("");
-    const photoURL = ref(null)
-    const { addDoc, error } = useCollection('mystat')
-
-    const mystat = ref('')
+    const photoURL = ref(null);
+    const mystat = ref("");
+    const currentStat = ref("");
 
     function onChange(e) {
       this.uploadValue = 0;
@@ -77,29 +92,38 @@ export default {
     }
 
     async function updateProfile() {
-      auth.onAuthStateChanged(user => {
-        if(user) {
-          // let user = auth.currentUser;
-          user.updateProfile({
-            displayName: displayName.value,
-            photoURL: photoURL.value
-          }).then(alert('successfully updated profile'))
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          user
+            .updateProfile({
+              displayName: displayName.value,
+              photoURL: photoURL.value,
+            })
+            .then(alert("successfully updated profile"));
         }
-      })
+      });
     }
-
-    // async function addPost() {
-
-    // }
-
-    async function updateProfileStatus() {
-      const status = {
-        status: mystat.value,
-        createdAt: timestamp()
-      }
-      await addDoc(status)
-      if(!error.value) {
-        mystat.value = ''
+   function updateProfileStatus() {
+      // const userPostRef = rtdb.ref('user-posts');
+      // const userId = userPostRef.child('userId');
+      // const postId = userId.child('postId')
+      if (auth.currentUser) {
+        writeNewPost(
+          auth.currentUser.uid,
+          auth.currentUser.displayName,
+          image.value,
+          mystat.value
+        );
+        var readStatus = rtdb.ref('user-posts/' + auth.currentUser.uid);
+         readStatus.on('value', (snapshot) => {
+             snapshot.forEach(function (childsnapshot) {
+            //  var key = childsnapshot.key;
+              // childData will be the actual contents of the child
+              var childData = childsnapshot.val();
+               currentStat.value = childData.body
+           console.log(childData)
+           })
+         })
       }
     }
 
@@ -114,13 +138,76 @@ export default {
           });
       }
     });
-
-    return { mystat, displayName, photoURL, user, image, onChange, updateProfile, updateProfileStatus };
+    return {
+      currentStat,
+      mystat,
+      displayName,
+      photoURL,
+      user,
+      image,
+      onChange,
+      updateProfile,
+      updateProfileStatus,
+    };
   },
 };
 </script>
 
 <style scoped>
+#dm {
+  border: 0.5rem;
+  border-color: black;
+  border-radius: 1rem;
+  border-style: solid;
+  font-size: x-large;
+  margin: 0.8rem;
+  padding: 8px;
+  height: fit-content;
+  width: auto;
+  transition: transform 0.2s;
+}
+#dm:hover {
+  background-color: red;
+  transform: scale(1.5);
+}
+h2 {
+  height: 90px;
+}
+#status {
+  border: 0.5rem;
+  border-color: black;
+  border-radius: 1rem;
+  border-style: solid;
+  font-size: x-large;
+  margin: 0.8rem;
+  padding: 8px;
+  background-color: white;
+}
+.status_display {
+  height: fit-content;
+}
+#status_message {
+  word-wrap: normal;
+  width: 400px;
+}
+.status_bar {
+  margin: 1.3rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  height: 200px;
+  border: 0.5rem;
+  border-style: solid;
+  border-color: black;
+  border-radius: 2rem;
+  background-color: crimson;
+}
+.wall {
+  grid-area: 2/1 / span 2 / span 3;
+  /* display: flex;
+  justify-content: space-around; */
+}
 textarea {
   width: 700px;
   max-width: 700px;
@@ -185,12 +272,10 @@ form {
   padding: 15px;
   background-color: crimson;
   border: 2rem;
-  border-style:ridge;
+  border-style: ridge;
   border-color: grey;
 }
-.deep-purple-text {
-  grid-area: 2/1;
-}
+
 h1 {
   font-size: 63pt;
 }

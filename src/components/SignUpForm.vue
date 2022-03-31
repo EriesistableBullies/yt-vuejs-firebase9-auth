@@ -40,6 +40,7 @@ export default {
       this.img1 = null;
       this.photoURL = e.target.files[0];
     }
+    
     async function handleSubmit() {
       await signup(email.value, password.value, displayName.value, photoURL.value).then(
         (auth) => {
