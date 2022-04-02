@@ -25,7 +25,7 @@
         </p>
       </div>
       <div class="information1">
-        <img src="../assets/abg2.png" style="cursor: pointer" @click="abg">
+        <img src="../assets/abg2.png" style="cursor: pointer" @click="abg" />
         <p id="abg">
           American Bullies Global Inc. is an American company, dedicated to the
           support of the American pitbull canine family and its offspring breeds
@@ -34,14 +34,38 @@
         </p>
       </div>
     </div>
+    <div class="main_feed">
+      <div class="main_post" v-for="post in posts" :key="post">
+        <h2 class="post_author">{{ post.author }}:</h2>
+        <hr />
+        <p class="post_author2">{{ post.body }}</p>
+        <form @submit="postComment">
+          <textarea
+            style="height: 100px; width: 900px; font-size: x-large"
+            id="comment"
+            type="text"
+            placeholder="Enter Comment"
+            @keypress.enter.prevent="postComment"
+          />
+        </form>
+        <button id="send_post">send</button>
+      </div>
+    </div>
   </main>
 </template>
 <script>
 import VideoPlayerVue from "../components/VideoPlayer.vue";
 import VideoPlayerVue1 from "../components/VideoPlayer1.vue";
 import VideoPlayerVue2 from "../components/VideoPlayer2.vue";
+import { rtdb } from "../firebase";
+import { ref } from "vue";
 import router from "../router";
 export default {
+  data() {
+    return {
+      posts: ref(),
+    };
+  },
   components: {
     VideoPlayerVue,
     VideoPlayerVue1,
@@ -54,13 +78,68 @@ export default {
       });
     },
   },
+  computed: {
+    listPosts() {
+      var readStatus = rtdb.ref("posts/").limitToLast(20);
+      readStatus.on("value", (snapshot) => {
+        this.posts = snapshot.val();
+        console.log(this.posts);
+      });
+
+      return this.posts;
+    },
+  },
+  created() {
+    this.listPosts;
+  },
 };
 </script>
 <style scoped>
+#send_post{
+  font-size: x-large;
+  color: black;
+  border-radius: 1rem;
+  padding: 8px;
+  margin-left: 0.5rem;
+}
+.main_feed {
+  background-color: black;
+  border-radius: 2rem;
+  border: 1rem;
+  border-style: solid;
+  border-color: black;
+  padding: 2rem;
+  margin: 2rem;
+}
+.post_author {
+  font-size: xx-large;
+  border: 0.3rem;
+  border-style: groove;
+  border-radius: 3rem;
+  border-color: red;
+  padding: 10px;
+  color: white;
+  width: 400px;
+}
+.post_author2 {
+  color: white;
+  word-wrap: normal;
+  width: 50%;
+}
+.main_post {
+  color: white;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: 0.5rem;
+  border-color: white;
+  border-radius: 1rem;
+  border-style: solid;
+}
 .content {
   display: flex;
   flex-direction: column;
-  width:100%;
+  width: 100%;
 }
 .information {
   display: flex;
@@ -90,7 +169,7 @@ p {
 }
 .home {
   padding: 1rem;
-  background-image: url('../assets/space.jpg');
+  background-image: url("../assets/space.jpg");
   background-size: cover;
 }
 
@@ -123,7 +202,7 @@ img:hover {
   margin-block: 1rem;
   border-color: red;
 }
-.abg-popup{
-  color:white;
+.abg-popup {
+  color: white;
 }
 </style>

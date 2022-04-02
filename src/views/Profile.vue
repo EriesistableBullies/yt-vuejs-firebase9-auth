@@ -31,7 +31,7 @@
           <textarea
             style="height: 200px"
             placeholder="Update status..."
-           v-model="mystat"
+            v-model="mystat"
           >
           </textarea>
           <div class="error">
@@ -47,9 +47,25 @@
       <div class="status_bar">
         <h2 id="status">Current<br />Status:</h2>
         <p id="status" class="status_display">
-         {{this.currentStat}}
+          {{ this.currentStat }}
         </p>
         <button style="cursor: pointer" id="dm">Send Message</button>
+      </div>
+      <div class="posts">
+        <div v-for="post in posts" :key="post" class="user_post">
+          <div id="author_label">
+            <img id="post_image" :src="this.image" />
+            <div id="author">
+              {{ post.author }}:
+              </div>
+            <div id="post_body">
+              {{ post.body }}
+            </div>
+            <div id="post_comment">
+              <input id="comment" type="text" placeholder="Enter Comment" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -57,24 +73,37 @@
 
 <script>
 import { ref } from "vue";
-// import writeNewPost from "../composables/rest";
 import getUser from "../composables/getUser";
 import firebase from "firebase";
 import { auth } from "../firebase/index";
 import { rtdb } from "../firebase/index";
 import useRest from "../composables/rest";
-// import { storage } from "../firebase/index";
+// import toDate from 'date-fns/esm/fp/isDate'
+// import { timestamp } from "../firebase";
 export default {
-  name: 'Profile',
+  name: "Profile",
   data() {
     return {
       photo: null,
-      profile: null
+      profile: null,
+      posts: ref(),
     };
   },
+  computed: {
+    listPosts() {
+      var readStatus = rtdb
+        .ref("user-posts/" + auth.currentUser.uid)
+        .limitToLast(5);
+      readStatus.on("value", (snapshot) => {
+        this.posts = snapshot.val();
+        console.log(this.posts);
+      });
+
+      return this.posts;
+    },
+  },
   created() {
-    // let ref = db.collection('users')
-    // ref.doc()
+    this.listPosts;
   },
   setup() {
     const { writeNewPost } = useRest();
@@ -103,7 +132,7 @@ export default {
         }
       });
     }
-   function updateProfileStatus() {
+    function updateProfileStatus() {
       // const userPostRef = rtdb.ref('user-posts');
       // const userId = userPostRef.child('userId');
       // const postId = userId.child('postId')
@@ -114,16 +143,18 @@ export default {
           image.value,
           mystat.value
         );
-        var readStatus = rtdb.ref('user-posts/' + auth.currentUser.uid);
-         readStatus.on('value', (snapshot) => {
-             snapshot.forEach(function (childsnapshot) {
+        var readStatus = rtdb
+          .ref("user-posts/" + auth.currentUser.uid)
+          .limitToLast(10);
+        readStatus.on("value", (snapshot) => {
+          snapshot.forEach(function (childsnapshot) {
             //  var key = childsnapshot.key;
-              // childData will be the actual contents of the child
-              var childData = childsnapshot.val();
-               currentStat.value = childData.body
-           console.log(childData)
-           })
-         })
+            // childData will be the actual contents of the child
+            var childData = childsnapshot.val();
+            currentStat.value = childData.body;
+            console.log(childData);
+          });
+        });
       }
     }
 
@@ -154,6 +185,76 @@ export default {
 </script>
 
 <style scoped>
+#comment{
+
+}
+#post_image{
+  grid-area: 1/1/span 1/span 1;
+}
+#author{
+  grid-area: 1/2/span 1/span 1;
+  border-color: black;
+  border: 0.2rem;
+  border-style: solid;
+  border-radius: 22rem;
+  background-color: crimson;
+  width: 98%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  margin-right: 2rem;
+  margin-top: 2rem;
+
+}
+#post_body{
+  grid-area: 2/1/span 1/span 2;
+}
+#post_comment{
+  grid-area: 3/1/span 1/span 2;
+    
+}
+#post_image {
+  height: 100px;
+  width: 100px;
+}
+#comment {
+  width: fit-content;
+  word-wrap: normal;
+}
+#author_label {
+  border-color: black;
+  border: 0.2rem;
+  border-style: solid;
+  border-radius: 1rem;
+  background-color: white;
+  width: 50%;
+  word-wrap: normal;
+  padding: 6px;
+  font-size: xx-large;
+  display: grid;
+
+  height: fit-content;
+  /* display: flex;
+  flex-direction: column; */
+  /* justify-content: space-around; */
+}
+.posts {
+  display: flex;
+  flex-direction: column;
+  height: 400px;
+  padding: 1rem;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    
+}
+.user_post {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 1rem;
+}
 #dm {
   border: 0.5rem;
   border-color: black;
@@ -205,6 +306,10 @@ h2 {
 }
 .wall {
   grid-area: 2/1 / span 2 / span 3;
+    background-image: url('../assets/EB_Long.png');
+  background-size: cover;
+  bottom: 25%;
+
   /* display: flex;
   justify-content: space-around; */
 }

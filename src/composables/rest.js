@@ -1,4 +1,4 @@
-import { rtdb } from "../firebase";
+import { rtdb, timestamp } from "../firebase";
 
 
 // // read post
@@ -12,13 +12,14 @@ function readPost(userId) {
 }
 
 // write new post
-function writeNewPost(userId, displayName, picture, body) {
+function writeNewPost(userId, displayName, picture, body, ) {
 
     var postData = {
         author: displayName,
         userId: userId,
         body: body,
-        picture: picture
+        picture: picture,
+        createdAt: timestamp()
     }
 
     //get new key for post 

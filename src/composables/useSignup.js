@@ -29,7 +29,7 @@ const signup = async (email, password, displayName, photoURL) => {
 }
 
 
-const saveUserToDatabase = user => {
+const writeUserData = user => {
     const newUser = rtdb.ref('users/list')
     newUser.push(user);
 }
@@ -42,7 +42,7 @@ const createUser = user => {
 
 //just return values
 const useSignup = () => {
-    return { error, signup, createUser, saveUserToDatabase }
+    return { error, signup, createUser, writeUserData }
 }
 
 
