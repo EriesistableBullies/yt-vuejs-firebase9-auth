@@ -96,7 +96,6 @@ export default {
         .limitToLast(5);
       readStatus.on("value", (snapshot) => {
         this.posts = snapshot.val();
-        console.log(this.posts);
       });
 
       return this.posts;
@@ -133,9 +132,6 @@ export default {
       });
     }
     function updateProfileStatus() {
-      // const userPostRef = rtdb.ref('user-posts');
-      // const userId = userPostRef.child('userId');
-      // const postId = userId.child('postId')
       if (auth.currentUser) {
         writeNewPost(
           auth.currentUser.uid,
@@ -152,7 +148,7 @@ export default {
             // childData will be the actual contents of the child
             var childData = childsnapshot.val();
             currentStat.value = childData.body;
-            console.log(childData);
+            // console.log(childData);
           });
         });
       }

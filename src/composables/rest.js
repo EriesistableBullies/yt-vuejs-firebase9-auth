@@ -11,6 +11,26 @@ function readPost(userId) {
     });
 }
 
+function writeNewComment(userId,displayName,picture,body) {
+    var postData = {
+        author: displayName,
+        userId: userId,
+        body: body,
+        picture: picture,
+        createdAt: timestamp()
+    }
+    //get key from post to comment on 
+    var post = rtdb.ref('posts').orderByKey();
+    post.on('child_added', (snapshot) => {
+        var key = snapshot.key;
+        console.log(key)
+    var updates = {};
+    updates['/posts/' + key + '/comment'] = postData
+
+    return rtdb.ref().update(updates);
+})
+}
+
 // write new post
 function writeNewPost(userId, displayName, picture, body, ) {
 
@@ -35,8 +55,9 @@ function writeNewPost(userId, displayName, picture, body, ) {
     return rtdb.ref().update(updates);
 }
 
+
 const useRest = () => {
-    return { writeNewPost, readPost }
+    return { writeNewPost, readPost, writeNewComment }
 }
 
 

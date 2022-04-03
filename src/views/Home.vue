@@ -39,13 +39,16 @@
         <h2 class="post_author">{{ post.author }}:</h2>
         <hr />
         <p class="post_author2">{{ post.body }}</p>
-        <form @submit="postComment">
+        <select v-model="comment">
+          <option>{{ this.comment }}</option>
+        </select>
+        <form>
           <textarea
             style="height: 100px; width: 900px; font-size: x-large"
             id="comment"
             type="text"
             placeholder="Enter Comment"
-            @keypress.enter.prevent="postComment"
+            @keypress.enter.prevent="postComment1"
           />
         </form>
         <button id="send_post">send</button>
@@ -60,6 +63,8 @@ import VideoPlayerVue2 from "../components/VideoPlayer2.vue";
 import { rtdb } from "../firebase";
 import { ref } from "vue";
 import router from "../router";
+import useRest from "../composables/rest";
+import { auth } from "../firebase";
 export default {
   data() {
     return {
@@ -77,13 +82,17 @@ export default {
         path: "/abg-dapp",
       });
     },
+    wipe() {
+      var posts = rtdb.ref('user-posts');
+      posts.remove().then(alert('wiped!'))
+    }
   },
   computed: {
     listPosts() {
       var readStatus = rtdb.ref("posts/").limitToLast(20);
       readStatus.on("value", (snapshot) => {
         this.posts = snapshot.val();
-        console.log(this.posts);
+        // console.log(this.posts);
       });
 
       return this.posts;
@@ -92,10 +101,41 @@ export default {
   created() {
     this.listPosts;
   },
+  setup() {
+    const { writeNewPost, writeNewComment } = useRest();
+    const comment = ref("");
+
+    function postComment1() {
+      if (auth) {
+        // var postKey = rtdb.ref("posts").orderByKey();
+        // postKey.once("value").then(function (snapshot) {
+        //     // key will be "ada" the first time and "alan" the second time
+        //     snapshot.forEach((childsnapshot) => {
+        //       var key = [];
+        //       key.push(childsnapshot);
+        //       console.log(key);
+              writeNewComment(auth.currentUser.uid, auth.currentUser.displayName, auth.currentUser.photoURL, comment.value)
+            // })
+               
+            // childData will be the actual contents of the child
+            // var childData = childSnapshot.val();
+              //  var commentPost = rtdb.ref('posts/' + key + '/comment' + auth.currentUser.uid )
+            
+            // console.log(snapshot)
+        
+            // console.log(childSnapshot)
+            // console.log(childData)
+            // console.log(key)
+     
+      }
+    }
+
+    return { writeNewPost, postComment1 };
+  },
 };
 </script>
 <style scoped>
-#send_post{
+#send_post {
   font-size: x-large;
   color: black;
   border-radius: 1rem;
